@@ -32,10 +32,7 @@ if (isAndroidProject()) {
         from androidJavadocs.destinationDir
     }
 
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-    }
+
 } else {
     task sourcesJar(type: Jar) {
         from sourceSets.main.allJava
