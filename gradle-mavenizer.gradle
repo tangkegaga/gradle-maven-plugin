@@ -6,14 +6,31 @@ apply from: "https://raw.githubusercontent.com/tangkegaga/gradle-maven-plugin/${
 apply from: "https://raw.githubusercontent.com/tangkegaga/gradle-maven-plugin/${gradlePluginVersion}/artifact-pom-manager.gradle"
 
 project.afterEvaluate {
+
+    task androidSourcesJar(type: Jar) {
+        archiveClassifier.set('sources')
+        from android.sourceSets.main.java.source
+    }
+
+    artifacts {
+        archives androidSourcesJar
+    }
+
     publishing {
         publications {
-            mavenPublish(MavenPublication) {
+            library(MavenPublication) {
+                setGroupId "$groupId"
+                setArtifactId "$artifactId"
+                version android.defaultConfig.versionName
+
+                artifact bundleReleaseAar
+                artifact androidSourcesJar
 
                 decoratePom(pom)
             }
         }
-        
+
+
         repositories {
             def isToRemoteRepo = getBooleanProperty("mavPublishToRemoteRepo")
             def isToInternalRepo = getBooleanProperty("mavPublishToInternalRepo")
